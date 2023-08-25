@@ -22,6 +22,12 @@ const taskSchema = mongoose.Schema({
         type: String,
         required: false
     },
+    date: {
+        type: Date,
+        required: false
+    }
+}, {
+    timestamps: true
 })
 
 module.exports = mongoose.model("Task", taskSchema)

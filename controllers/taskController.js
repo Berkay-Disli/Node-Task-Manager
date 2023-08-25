@@ -12,11 +12,20 @@ const getTaskById = asyncHandler(async (req, res) => {
 })
 
 const createTask = asyncHandler(async (req, res) => {
-    const { title, details, priority, status } = req.body
+    const { title, details, priority, status, date } = req.body
 
     if (!title || !details) {
         res.status(400)
         throw new Error("Title and description is mandatory.")
+    }
+
+    let adjustedTaskDate;
+    if (date) {
+        adjustedTaskDate = new Date(date).toISOString();
+    } else {
+        const currentDate = new Date();
+        currentDate.setDate(currentDate.getDate() + 1); 
+        adjustedTaskDate = currentDate.toISOString();
     }
 
     const newTask = await Task.create({
@@ -25,6 +34,7 @@ const createTask = asyncHandler(async (req, res) => {
         priority: priority || "low",
         status: status || "todo",
         user_id: req.user.id,
+        date: adjustedTaskDate
     })
 
     res.status(201).json({
